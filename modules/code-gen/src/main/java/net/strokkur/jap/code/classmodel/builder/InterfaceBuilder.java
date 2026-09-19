@@ -1,7 +1,7 @@
 /*
  * This file is part of code-gen, licensed under the MIT License.
  *
- * Copyright (c) 2025 Strokkur24
+ * Copyright (c) 2026 Strokkur24
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,41 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.strokkur.jap.code.classmodel;
+package net.strokkur.jap.code.classmodel.builder;
 
-import net.strokkur.jap.code.convert.ConvertToStatement;
-import net.strokkur.jap.code.statement.CodeStatement;
-import net.strokkur.jap.code.visitor.CodeVisitable;
-import net.strokkur.jap.code.visitor.CodeVisitor;
+import net.strokkur.jap.code.classmodel.CodeInterface;
+import net.strokkur.jap.code.convert.ConvertToClassType;
+import net.strokkur.jap.code.type.CodeClassType;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
-public record CodeBlock(List<CodeStatement> statements) implements CodeVisitable {
-  public static CodeBlock of(ConvertToStatement... statements) {
-    return new CodeBlock(Arrays.stream(statements)
-      .map(ConvertToStatement::toStatement)
-      .toList()
+public class InterfaceBuilder extends AbstractClassLikeBuilder.Typed<InterfaceBuilder> {
+  private final List<CodeClassType> extendsInterfaces = new ArrayList<>();
+
+  public InterfaceBuilder(ConvertToClassType type) {
+    super(type);
+  }
+
+  @Contract(value = "_ -> this", mutates = "this")
+  public InterfaceBuilder extendsInterfaces(ConvertToClassType... implementsInterfaces) {
+    this.extendsInterfaces.addAll(Arrays.stream(implementsInterfaces)
+      .map(ConvertToClassType::toClassType)
+      .toList());
+    return this;
+  }
+
+  public CodeInterface toInterface() {
+    return new CodeInterface(
+      type,
+      List.copyOf(genericTypes),
+      Set.copyOf(modifiers),
+      List.copyOf(annotations),
+      List.copyOf(extendsInterfaces),
+      List.copyOf(fields),
+      List.copyOf(methods),
+      documentation
     );
-  }
-
-  @Contract("!null -> !null")
-  @Nullable
-  public static CodeBlock of(@Nullable List<ConvertToStatement> statements) {
-    if (statements == null) {
-      return null;
-    } else {
-      return new CodeBlock(statements.stream()
-        .map(ConvertToStatement::toStatement)
-        .toList()
-      );
-    }
-  }
-
-  @Override
-  public <R> R accept(CodeVisitor<R> visitor) {
-    return visitor.visitCodeBlock(this);
   }
 }

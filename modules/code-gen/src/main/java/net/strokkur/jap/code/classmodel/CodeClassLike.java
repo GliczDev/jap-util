@@ -1,7 +1,7 @@
 /*
  * This file is part of code-gen, licensed under the MIT License.
  *
- * Copyright (c) 2025 Strokkur24
+ * Copyright (c) 2026 Strokkur24
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,39 +23,33 @@
  */
 package net.strokkur.jap.code.classmodel;
 
-import net.strokkur.jap.code.convert.ConvertToStatement;
-import net.strokkur.jap.code.statement.CodeStatement;
+import net.strokkur.jap.code.annotations.CodeAnnotated;
+import net.strokkur.jap.code.annotations.CodeAnnotation;
+import net.strokkur.jap.code.convert.ConvertToClassType;
+import net.strokkur.jap.code.documentation.CodeDocumentation;
+import net.strokkur.jap.code.type.CodeClassType;
+import net.strokkur.jap.code.util.Modifiers;
 import net.strokkur.jap.code.visitor.CodeVisitable;
-import net.strokkur.jap.code.visitor.CodeVisitor;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
-public record CodeBlock(List<CodeStatement> statements) implements CodeVisitable {
-  public static CodeBlock of(ConvertToStatement... statements) {
-    return new CodeBlock(Arrays.stream(statements)
-      .map(ConvertToStatement::toStatement)
-      .toList()
-    );
-  }
+public interface CodeClassLike extends CodeAnnotated, ConvertToClassType, CodeVisitable {
+  CodeClassType classType();
 
-  @Contract("!null -> !null")
-  @Nullable
-  public static CodeBlock of(@Nullable List<ConvertToStatement> statements) {
-    if (statements == null) {
-      return null;
-    } else {
-      return new CodeBlock(statements.stream()
-        .map(ConvertToStatement::toStatement)
-        .toList()
-      );
-    }
-  }
+  Set<Modifiers> modifiers();
+
+  List<CodeAnnotation> annotations();
+
+  @Nullable CodeDocumentation documentation();
+
+  List<CodeMethod> methods();
+
+  List<CodeField> fields();
 
   @Override
-  public <R> R accept(CodeVisitor<R> visitor) {
-    return visitor.visitCodeBlock(this);
+  default CodeClassType toClassType() {
+    return classType();
   }
 }

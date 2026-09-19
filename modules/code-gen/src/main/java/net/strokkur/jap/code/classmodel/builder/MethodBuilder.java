@@ -28,11 +28,12 @@ import net.strokkur.jap.code.classmodel.CodeBlock;
 import net.strokkur.jap.code.classmodel.CodeMethod;
 import net.strokkur.jap.code.classmodel.CodeParameterDefinition;
 import net.strokkur.jap.code.convert.ConvertToClassType;
+import net.strokkur.jap.code.convert.ConvertToExpression;
 import net.strokkur.jap.code.convert.ConvertToMethod;
 import net.strokkur.jap.code.convert.ConvertToStatement;
 import net.strokkur.jap.code.convert.ConvertToType;
 import net.strokkur.jap.code.documentation.CodeDocumentation;
-import net.strokkur.jap.code.statement.CodeStatement;
+import net.strokkur.jap.code.expression.CodeExpression;
 import net.strokkur.jap.code.type.CodeClassType;
 import net.strokkur.jap.code.type.CodePrimitiveType;
 import net.strokkur.jap.code.type.CodeType;
@@ -51,7 +52,8 @@ public class MethodBuilder implements ConvertToMethod {
 
   private CodeType returnType = CodePrimitiveType.VOID;
   private @Nullable CodeDocumentation documentation = null;
-  private final List<CodeStatement> codeBlock = new ArrayList<>();
+  private @Nullable List<ConvertToStatement> code = null;
+  private @Nullable CodeExpression defaults = null;
 
   private final List<CodeGenericTypeDefinition> generics = new ArrayList<>();
   private final List<CodeAnnotation> annotations = new ArrayList<>();
@@ -74,14 +76,25 @@ public class MethodBuilder implements ConvertToMethod {
   }
 
   public MethodBuilder setCode(ConvertToStatement... statements) {
-    this.codeBlock.clear();
+    if (this.code == null) {
+      this.code = new ArrayList<>();
+    } else {
+      this.code.clear();
+    }
     return addCode(statements);
   }
 
   public MethodBuilder addCode(ConvertToStatement... statements) {
-    this.codeBlock.addAll(Arrays.stream(statements)
-      .map(ConvertToStatement::toStatement)
-      .toList());
+    if (this.code == null) {
+      this.code = new ArrayList<>();
+    }
+    this.code.addAll(List.of(statements));
+    return this;
+  }
+
+  public MethodBuilder withDefault(ConvertToExpression defaultsExpr) {
+    this.code = null;
+    this.defaults = defaultsExpr.toExpression();
     return this;
   }
 
@@ -135,7 +148,8 @@ public class MethodBuilder implements ConvertToMethod {
       List.copyOf(throwsExceptions),
       documentation,
       List.copyOf(parameters),
-      new CodeBlock(List.copyOf(codeBlock))
+      CodeBlock.of(code),
+      defaults
     );
   }
 }

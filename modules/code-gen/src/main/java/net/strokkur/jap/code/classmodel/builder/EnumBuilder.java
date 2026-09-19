@@ -23,13 +23,15 @@
  */
 package net.strokkur.jap.code.classmodel.builder;
 
-import net.strokkur.jap.code.classmodel.CodeClass;
 import net.strokkur.jap.code.classmodel.CodeConstructor;
+import net.strokkur.jap.code.classmodel.CodeEnum;
+import net.strokkur.jap.code.classmodel.CodeEnumValue;
 import net.strokkur.jap.code.convert.ConvertToClassType;
 import net.strokkur.jap.code.convert.ConvertToConstructor;
+import net.strokkur.jap.code.convert.ConvertToExpression;
+import net.strokkur.jap.code.documentation.CodeDocumentation;
 import net.strokkur.jap.code.type.CodeClassType;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,24 +39,32 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class ClassBuilder extends AbstractClassLikeBuilder.Typed<ClassBuilder> {
-  private final List<CodeConstructor> constructors = new ArrayList<>();
-  private @Nullable CodeClassType extendsClass = null;
+public class EnumBuilder extends AbstractClassLikeBuilder<EnumBuilder> {
   private final List<CodeClassType> implementsInterfaces = new ArrayList<>();
+  private final List<CodeEnumValue> enumValues = new ArrayList<>();
+  private final List<CodeConstructor> constructors = new ArrayList<>();
 
-  public ClassBuilder(ConvertToClassType type) {
+  public EnumBuilder(ConvertToClassType type) {
     super(type);
   }
 
   @Contract(value = "_ -> this", mutates = "this")
-  public ClassBuilder addConstructor(Consumer<ConstructorBuilder> consumer) {
+  public EnumBuilder implementsInterfaces(ConvertToClassType... implementsInterfaces) {
+    this.implementsInterfaces.addAll(Arrays.stream(implementsInterfaces)
+      .map(ConvertToClassType::toClassType)
+      .toList());
+    return this;
+  }
+
+  @Contract(value = "_ -> this", mutates = "this")
+  public EnumBuilder addConstructor(Consumer<ConstructorBuilder> consumer) {
     final ConstructorBuilder builder = CodeConstructor.builder(this.type);
     consumer.accept(builder);
     return addConstructor(builder);
   }
 
   @Contract(value = "_ -> this", mutates = "this")
-  public ClassBuilder addConstructor(ConvertToConstructor... constructors) {
+  public EnumBuilder addConstructor(ConvertToConstructor... constructors) {
     this.constructors.addAll(Arrays.stream(constructors)
       .map(ConvertToConstructor::toConstructor)
       .toList()
@@ -62,38 +72,35 @@ public class ClassBuilder extends AbstractClassLikeBuilder.Typed<ClassBuilder> {
     return this;
   }
 
-  @Contract(value = "_ -> this", mutates = "this")
-  public ClassBuilder extendsClass(@Nullable ConvertToClassType extendsClass) {
-    this.extendsClass = extendsClass != null ? extendsClass.toClassType() : null;
+  @Contract(value = "_,_ -> this", mutates = "this")
+  public EnumBuilder addValue(String name, ConvertToExpression... parameters) {
+    this.enumValues.add(CodeEnumValue.of(name, parameters));
+    return this;
+  }
+
+  @Contract(value = "_,_,_ -> this", mutates = "this")
+  public EnumBuilder addValue(String name, CodeDocumentation documentation, ConvertToExpression... parameters) {
+    this.enumValues.add(CodeEnumValue.of(name, documentation, parameters));
     return this;
   }
 
   @Contract(value = "_ -> this", mutates = "this")
-  public ClassBuilder implementsInterfaces(ConvertToClassType... implementsInterfaces) {
-    this.implementsInterfaces.addAll(Arrays.stream(implementsInterfaces)
-      .map(ConvertToClassType::toClassType)
-      .toList());
+  public EnumBuilder addValues(CodeEnumValue... values) {
+    this.enumValues.addAll(List.of(values));
     return this;
   }
 
-  public CodeClass toClass() {
-    return new CodeClass(
+  public CodeEnum toEnum() {
+    return new CodeEnum(
       type,
-      List.copyOf(genericTypes),
       Set.copyOf(modifiers),
       List.copyOf(annotations),
-      extendsClass,
       List.copyOf(implementsInterfaces),
+      List.copyOf(enumValues),
       List.copyOf(fields),
-      List.copyOf(methods),
       List.copyOf(constructors),
+      List.copyOf(methods),
       documentation
     );
-  }
-
-  @Contract(pure = true)
-  @Deprecated(forRemoval = true)
-  public CodeClass build() {
-    return toClass();
   }
 }

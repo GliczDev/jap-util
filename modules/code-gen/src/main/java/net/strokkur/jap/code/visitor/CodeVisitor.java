@@ -25,12 +25,19 @@ package net.strokkur.jap.code.visitor;
 
 import net.strokkur.jap.code.annotations.CodeAnnotation;
 import net.strokkur.jap.code.annotations.CodeAnnotationParameter;
+import net.strokkur.jap.code.classmodel.CodeAnnotationType;
 import net.strokkur.jap.code.classmodel.CodeBlock;
 import net.strokkur.jap.code.classmodel.CodeClass;
 import net.strokkur.jap.code.classmodel.CodeConstructor;
+import net.strokkur.jap.code.classmodel.CodeEnum;
+import net.strokkur.jap.code.classmodel.CodeEnumValue;
 import net.strokkur.jap.code.classmodel.CodeField;
+import net.strokkur.jap.code.classmodel.CodeInterface;
 import net.strokkur.jap.code.classmodel.CodeMethod;
 import net.strokkur.jap.code.classmodel.CodeParameterDefinition;
+import net.strokkur.jap.code.classmodel.CodePrimaryConstructor;
+import net.strokkur.jap.code.classmodel.CodeRecord;
+import net.strokkur.jap.code.classmodel.CodeRecordComponent;
 import net.strokkur.jap.code.documentation.CodeDocumentation;
 import net.strokkur.jap.code.expression.CodeExpression;
 import net.strokkur.jap.code.statement.CodeStatement;
@@ -45,7 +52,21 @@ public interface CodeVisitor<R> {
 
   R visitClass(CodeClass codeClass);
 
+  R visitInterface(CodeInterface codeInterface);
+
+  R visitEnum(CodeEnum codeEnum);
+
+  R visitEnumValue(CodeEnumValue enumValue);
+
+  R visitRecord(CodeRecord record);
+
+  R visitRecordComponent(CodeRecordComponent recordComponent);
+
+  R visitAnnotationType(CodeAnnotationType annotationType);
+
   R visitConstructor(CodeConstructor ctor);
+
+  R visitPrimaryConstructor(CodePrimaryConstructor ctor);
 
   R visitField(CodeField field);
 

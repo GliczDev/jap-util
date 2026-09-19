@@ -23,10 +23,15 @@
  */
 package net.strokkur.jap.code.classmodel.builder;
 
-import net.strokkur.jap.code.classmodel.CodeClass;
+import net.strokkur.jap.code.annotations.CodeAnnotation;
 import net.strokkur.jap.code.classmodel.CodeConstructor;
+import net.strokkur.jap.code.classmodel.CodePrimaryConstructor;
+import net.strokkur.jap.code.classmodel.CodeRecord;
+import net.strokkur.jap.code.classmodel.CodeRecordComponent;
 import net.strokkur.jap.code.convert.ConvertToClassType;
 import net.strokkur.jap.code.convert.ConvertToConstructor;
+import net.strokkur.jap.code.convert.ConvertToPrimaryConstructor;
+import net.strokkur.jap.code.convert.ConvertToType;
 import net.strokkur.jap.code.type.CodeClassType;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
@@ -37,24 +42,40 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class ClassBuilder extends AbstractClassLikeBuilder.Typed<ClassBuilder> {
-  private final List<CodeConstructor> constructors = new ArrayList<>();
-  private @Nullable CodeClassType extendsClass = null;
+public class RecordBuilder extends AbstractClassLikeBuilder.Typed<RecordBuilder> {
   private final List<CodeClassType> implementsInterfaces = new ArrayList<>();
+  private final List<CodeRecordComponent> components = new ArrayList<>();
 
-  public ClassBuilder(ConvertToClassType type) {
+  private @Nullable CodePrimaryConstructor primaryConstructor = null;
+  private final List<CodeConstructor> constructors = new ArrayList<>();
+
+  public RecordBuilder(ConvertToClassType type) {
     super(type);
   }
 
   @Contract(value = "_ -> this", mutates = "this")
-  public ClassBuilder addConstructor(Consumer<ConstructorBuilder> consumer) {
+  public RecordBuilder withPrimaryConstructor(ConvertToPrimaryConstructor ctor) {
+    this.primaryConstructor = ctor.toPrimaryConstructor();
+    return this;
+  }
+
+  @Contract(value = "_ -> this", mutates = "this")
+  public RecordBuilder withPrimaryConstructor(Consumer<PrimaryConstructorBuilder> consumer) {
+    final PrimaryConstructorBuilder builder = CodePrimaryConstructor.builder(this.type);
+    consumer.accept(builder);
+    this.primaryConstructor = builder.toPrimaryConstructor();
+    return this;
+  }
+
+  @Contract(value = "_ -> this", mutates = "this")
+  public RecordBuilder addConstructor(Consumer<ConstructorBuilder> consumer) {
     final ConstructorBuilder builder = CodeConstructor.builder(this.type);
     consumer.accept(builder);
     return addConstructor(builder);
   }
 
   @Contract(value = "_ -> this", mutates = "this")
-  public ClassBuilder addConstructor(ConvertToConstructor... constructors) {
+  public RecordBuilder addConstructor(ConvertToConstructor... constructors) {
     this.constructors.addAll(Arrays.stream(constructors)
       .map(ConvertToConstructor::toConstructor)
       .toList()
@@ -62,38 +83,40 @@ public class ClassBuilder extends AbstractClassLikeBuilder.Typed<ClassBuilder> {
     return this;
   }
 
-  @Contract(value = "_ -> this", mutates = "this")
-  public ClassBuilder extendsClass(@Nullable ConvertToClassType extendsClass) {
-    this.extendsClass = extendsClass != null ? extendsClass.toClassType() : null;
+  @Contract(value = "_,_,_ -> this", mutates = "this")
+  public RecordBuilder addComponent(ConvertToType type, String name, CodeAnnotation... annotations) {
+    this.components.add(CodeRecordComponent.of(type, name, annotations));
     return this;
   }
 
   @Contract(value = "_ -> this", mutates = "this")
-  public ClassBuilder implementsInterfaces(ConvertToClassType... implementsInterfaces) {
+  public RecordBuilder addComponents(CodeRecordComponent... components) {
+    this.components.addAll(List.of(components));
+    return this;
+  }
+
+  @Contract(value = "_ -> this", mutates = "this")
+  public RecordBuilder implementsInterfaces(ConvertToClassType... implementsInterfaces) {
     this.implementsInterfaces.addAll(Arrays.stream(implementsInterfaces)
       .map(ConvertToClassType::toClassType)
       .toList());
     return this;
   }
 
-  public CodeClass toClass() {
-    return new CodeClass(
+  @Contract(pure = true)
+  public CodeRecord toRecord() {
+    return new CodeRecord(
       type,
       List.copyOf(genericTypes),
       Set.copyOf(modifiers),
       List.copyOf(annotations),
-      extendsClass,
       List.copyOf(implementsInterfaces),
+      List.copyOf(components),
       List.copyOf(fields),
       List.copyOf(methods),
+      primaryConstructor,
       List.copyOf(constructors),
       documentation
     );
-  }
-
-  @Contract(pure = true)
-  @Deprecated(forRemoval = true)
-  public CodeClass build() {
-    return toClass();
   }
 }
