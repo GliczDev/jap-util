@@ -34,6 +34,6 @@ public interface JSpecifyTypes extends ConvertToClassType {
   JSpecifyTypes NON_NULL = create("NonNull");
 
   static JSpecifyTypes create(String name) {
-    return () -> CodeTypes.ofClass("org.jspecify.annotations." + name);
+    return () -> CodeTypes.of("org.jspecify.annotations." + name);
   }
 }

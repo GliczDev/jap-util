@@ -136,10 +136,10 @@ class ClassGenTests extends AbstractGenTest {
 
   @Test
   void testExtendsAndInterfaces() {
-    final CodeClassType thisType = CodeTypes.ofClass("idk.MyClass");
-    final CodeClassType extendsType = CodeTypes.ofClass("this.Extends");
-    final CodeClassType implementsType1 = CodeTypes.ofClass("this.Implements1");
-    final CodeClassType implementsType2 = CodeTypes.ofClass("this.Implements2");
+    final CodeClassType thisType = CodeTypes.of("idk.MyClass");
+    final CodeClassType extendsType = CodeTypes.of("this.Extends");
+    final CodeClassType implementsType1 = CodeTypes.of("this.Implements1");
+    final CodeClassType implementsType2 = CodeTypes.of("this.Implements2");
 
     // language=java
     final String java = """
@@ -159,7 +159,7 @@ class ClassGenTests extends AbstractGenTest {
 
   @Test
   void ensureTypesMatch() {
-    final CodeClassType type = CodeTypes.ofClass("some.cool.Type");
+    final CodeClassType type = CodeTypes.of("some.cool.Type");
     final CodeClass built = CodeClass.builder(type).build();
 
     Assertions.assertEquals(type, built.classType());

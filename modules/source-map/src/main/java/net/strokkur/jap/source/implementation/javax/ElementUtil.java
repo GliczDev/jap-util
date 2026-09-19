@@ -95,7 +95,7 @@ public final class ElementUtil {
 
   private static Object parseAnnotationValue(Object obj) {
     if (obj instanceof DeclaredType dec) {
-      return CodeTypes.ofClass(dec.toString());
+      return CodeTypes.of(dec.toString());
     }
     return obj;
   }
@@ -129,7 +129,7 @@ public final class ElementUtil {
     final Name name = processor.elements().getBinaryName((TypeElement) declared.asElement());
 
     final List<? extends TypeMirror> typeArgs = declared.getTypeArguments();
-    final CodeClassType out = CodeTypes.ofClass(name.toString());
+    final CodeClassType out = CodeTypes.of(name.toString());
 
     if (!typeArgs.isEmpty()) {
       return out.typed(typeArgs.stream()

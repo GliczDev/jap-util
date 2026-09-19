@@ -72,7 +72,7 @@ public record CodeClassType(
   }
 
   /// A name in the format `com.package.name.ParentClass$NestedClass`. This string
-  /// is intended to be usable inside [CodeTypes#ofClass(String)].
+  /// is intended to be usable inside [CodeTypes#of(String)].
   public String identifiableName() {
     return codePackage.path() + "." + simpleName.replace('.', '$');
   }

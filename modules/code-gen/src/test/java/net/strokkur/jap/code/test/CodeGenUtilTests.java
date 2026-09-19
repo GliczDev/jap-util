@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CodeGenUtilTests {
 
   private String createJavaFile() {
-    final CodeClassType targetFile = CodeTypes.ofClass("net.strokkur.test.TargetClass");
+    final CodeClassType targetFile = CodeTypes.of("net.strokkur.test.TargetClass");
     final CodeClass compiled = CodeClass.builder(targetFile)
       .setDocumentation(CodeDocumentation.text("A very simple example class to showcase the code gen feature."))
       .addModifiers(Modifiers.PUBLIC, Modifiers.FINAL)

@@ -72,6 +72,6 @@ public interface JavaTypes extends ConvertToClassType {
   JavaTypes METHOD = create(Method.class);
 
   static JavaTypes create(Class<?> type) {
-    return () -> CodeTypes.ofClass(type.getName());
+    return () -> CodeTypes.of(type.getName());
   }
 }

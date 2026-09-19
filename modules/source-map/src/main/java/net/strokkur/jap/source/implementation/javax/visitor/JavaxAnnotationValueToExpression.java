@@ -84,12 +84,12 @@ public class JavaxAnnotationValueToExpression extends AbstractAnnotationValueVis
 
   @Override
   public CodeExpression visitType(TypeMirror t, Void unused) {
-    return CodeTypes.ofClass(t.toString()).chainField("class");
+    return CodeTypes.of(t.toString()).chainField("class");
   }
 
   @Override
   public CodeExpression visitEnumConstant(VariableElement c, Void unused) {
-    return CodeTypes.ofClass(c.asType().toString()).chainField(c.getSimpleName().toString());
+    return CodeTypes.of(c.asType().toString()).chainField(c.getSimpleName().toString());
   }
 
   @Override

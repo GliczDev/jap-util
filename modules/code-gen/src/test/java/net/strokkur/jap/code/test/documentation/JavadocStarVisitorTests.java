@@ -156,7 +156,7 @@ class JavadocStarVisitorTests extends CommonDocumentationRendererTests {
        * at all.
        */""";
     checkOutput(expected, combineLines(
-      combine(text("This "), classReference(CodeTypes.ofClass("java.lang.ProcessEnvironment"), "environment"), text(" does not help me")),
+      combine(text("This "), classReference(CodeTypes.of("java.lang.ProcessEnvironment"), "environment"), text(" does not help me")),
       text("at all.")
     ), StarJavadocRenderer::new);
   }

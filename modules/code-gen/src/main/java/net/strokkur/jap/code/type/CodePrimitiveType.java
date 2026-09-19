@@ -54,7 +54,7 @@ public record CodePrimitiveType(
   }
 
   public CodeClassType boxed() {
-    return CodeTypes.ofClass("java.lang." + boxedName);
+    return CodeTypes.of("java.lang." + boxedName);
   }
 
   @Override

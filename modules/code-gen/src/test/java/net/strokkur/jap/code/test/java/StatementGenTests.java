@@ -174,7 +174,7 @@ class StatementGenTests extends AbstractGenTest {
       }
       """;
     checkCode(code, CodeMethod.builder("myMethod")
-      .addAnnotations(CodeTypes.ofJavaClass(Override.class))
+      .addAnnotations(CodeTypes.of(Override.class))
       .setCode(
         Statements.comment("This is a multi-line \n comment, with a newline!"),
         Expressions.superExpr().chainMethod("myMethod")

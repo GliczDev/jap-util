@@ -56,19 +56,43 @@ public final class CodeTypes {
   }
 
   /// A fully qualified name in the form `net.pkg.ClassName$Outer$Inner`.
+  public static CodeClassType of(String fqn) {
+    return ofClass(fqn, null);
+  }
+
+  public static CodeClassType of(Class<?> clazz) {
+    return of(clazz.getName());
+  }
+
+  /// A fully qualified name in the form `net.pkg.ClassName$Outer$Inner`.
+  public static CodeClassType ofTyped(String fqn, ConvertToGenericType... types) {
+    return ofClass(fqn, Arrays.stream(types)
+      .map(ConvertToGenericType::toGenericType)
+      .toList());
+  }
+
+  public static CodeClassType ofTyped(Class<?> clazz, ConvertToGenericType... types) {
+    return ofTyped(clazz.getName(), types);
+  }
+
+  /// A fully qualified name in the form `net.pkg.ClassName$Outer$Inner`.
+  /// @deprecated use [#of(String)] instead
+  @Deprecated(forRemoval = true)
   public static CodeClassType ofClass(String fullyQualifiedName) {
     return ofClass(fullyQualifiedName, null);
   }
 
   /// A fully qualified name in the form `net.pkg.ClassName$Outer$Inner`.
+  /// @deprecated use [#ofTyped(String, ConvertToGenericType...)] instead
+  @Deprecated(forRemoval = true)
   public static CodeClassType ofClassTyped(String fullyQualifiedName, ConvertToGenericType... types) {
-    return ofClass(fullyQualifiedName, Arrays.stream(types)
-      .map(ConvertToGenericType::toGenericType)
-      .toList());
+    return ofTyped(fullyQualifiedName, types);
   }
 
+  /// @deprecated use [#of(Class)] instead
+  @Deprecated(forRemoval = true)
   public static CodeClassType ofJavaClass(Class<?> clazz) {
-    return ofClass(clazz.getName());
+    return of(clazz.getName());
   }
 
   private static CodeClassType ofClass(String fullyQualifiedName, @Nullable List<CodeGenericType> types) {

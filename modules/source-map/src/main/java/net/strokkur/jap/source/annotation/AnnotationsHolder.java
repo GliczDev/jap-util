@@ -51,7 +51,7 @@ public interface AnnotationsHolder extends SourceElement {
   }
 
   default Optional<SourceAnnotation> findAnnotation(Class<? extends Annotation> annotationClass) {
-    return findAnnotation(CodeTypes.ofJavaClass(annotationClass));
+    return findAnnotation(CodeTypes.of(annotationClass));
   }
 
   default boolean hasAnnotation(ConvertToClassType type) {
@@ -59,7 +59,7 @@ public interface AnnotationsHolder extends SourceElement {
   }
 
   default boolean hasAnnotation(Class<? extends Annotation> annotationClass) {
-    return hasAnnotation(CodeTypes.ofJavaClass(annotationClass));
+    return hasAnnotation(CodeTypes.of(annotationClass));
   }
 
   default SourceAnnotation getAnnotation(ConvertToClassType type) {
@@ -103,7 +103,7 @@ public interface AnnotationsHolder extends SourceElement {
   }
 
   default Optional<SourceAnnotation> findAnnotationInherited(Class<? extends Annotation> annotationClass) {
-    return findAnnotationInherited(CodeTypes.ofJavaClass(annotationClass));
+    return findAnnotationInherited(CodeTypes.of(annotationClass));
   }
 
   default boolean hasAnnotationInherited(ConvertToClassType type) {
@@ -111,7 +111,7 @@ public interface AnnotationsHolder extends SourceElement {
   }
 
   default boolean hasAnnotationInherited(Class<? extends Annotation> annotationClass) {
-    return hasAnnotationInherited(CodeTypes.ofJavaClass(annotationClass));
+    return hasAnnotationInherited(CodeTypes.of(annotationClass));
   }
 
   default SourceAnnotation getAnnotationInherited(ConvertToClassType type) {

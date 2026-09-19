@@ -36,6 +36,6 @@ public interface JakartaInjectTypes extends ConvertToClassType {
   JakartaInjectTypes SINGLETON = create("Singleton");
 
   static JakartaInjectTypes create(String name) {
-    return () -> CodeTypes.ofClass("jakarta.inject." + name);
+    return () -> CodeTypes.of("jakarta.inject." + name);
   }
 }

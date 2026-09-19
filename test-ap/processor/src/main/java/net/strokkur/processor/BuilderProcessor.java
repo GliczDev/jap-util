@@ -82,7 +82,7 @@ public class BuilderProcessor extends AbstractProcessor implements SourceMapProc
         continue;
       }
 
-      final CodeClassType builderType = CodeTypes.ofClass(classLike.classType().fullyQualifiedName() + "Builder");
+      final CodeClassType builderType = CodeTypes.of(classLike.classType().fullyQualifiedName() + "Builder");
       final ClassBuilder builder = new ClassBuilder(builderType);
       builder.addModifiers(Modifiers.PUBLIC, Modifiers.FINAL);
 
@@ -185,7 +185,7 @@ public class BuilderProcessor extends AbstractProcessor implements SourceMapProc
     DefaultsAnnotations CAN_BE_NULL = create("CanBeNull");
 
     static DefaultsAnnotations create(String name) {
-      return () -> CodeTypes.ofClass("net.strokkur.processor.annotations.BuilderDefault$" + name);
+      return () -> CodeTypes.of("net.strokkur.processor.annotations.BuilderDefault$" + name);
     }
   }
 }

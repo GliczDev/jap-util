@@ -45,6 +45,6 @@ public interface TestTypes extends ConvertToClassType {
   TestTypes MY_CLASS = create("com.MyClass");
 
   static TestTypes create(String fqn) {
-    return () -> CodeTypes.ofClass(fqn);
+    return () -> CodeTypes.of(fqn);
   }
 }

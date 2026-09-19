@@ -106,7 +106,7 @@ abstract class CommonDocumentationRendererTests {
       text("The constructor is not accessible. There is no need for an instance"),
       text("to be created, as no state is stored and all methods are static."),
       blank(),
-      throwsMeta(CodeTypes.ofClass("java.lang.IllegalAccessException"), "always")
+      throwsMeta(CodeTypes.of("java.lang.IllegalAccessException"), "always")
     );
   }
 
@@ -125,7 +125,7 @@ abstract class CommonDocumentationRendererTests {
   CodeMethod registerMethod() {
     return CodeMethod.builder("register")
       .addParameters(
-        CodeParameterDefinition.of(CodeTypes.ofClass("io.papermc.paper.command.brigadier.Commands"), "commands")
+        CodeParameterDefinition.of(CodeTypes.of("io.papermc.paper.command.brigadier.Commands"), "commands")
       )
       .toMethod();
   }

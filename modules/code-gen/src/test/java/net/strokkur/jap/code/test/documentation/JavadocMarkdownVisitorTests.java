@@ -120,7 +120,7 @@ class JavadocMarkdownVisitorTests extends CommonDocumentationRendererTests {
       /// This [environment][ProcessEnvironment] does not help me
       /// at all.""";
     checkOutput(expected, combineLines(
-      combine(text("This "), classReference(CodeTypes.ofClass("java.lang.ProcessEnvironment"), "environment"), text(" does not help me")),
+      combine(text("This "), classReference(CodeTypes.of("java.lang.ProcessEnvironment"), "environment"), text(" does not help me")),
       text("at all.")
     ), MarkdownJavadocRenderer::new);
   }

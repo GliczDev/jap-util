@@ -55,7 +55,7 @@ public record CodeClass(
 ) implements CodeAnnotated, ConvertToClassType, CodeVisitable {
 
   public static ClassBuilder builder(String fqn) {
-    return builder(CodeTypes.ofClass(fqn));
+    return builder(CodeTypes.of(fqn));
   }
 
   public static ClassBuilder builder(ConvertToClassType type) {

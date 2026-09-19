@@ -34,14 +34,14 @@ class TypeTests {
 
   @Test
   void testOfClassParsing() {
-    final CodeClassType type$1 = CodeTypes.ofClass("org.bukkit.attribute.Attribute");
+    final CodeClassType type$1 = CodeTypes.of("org.bukkit.attribute.Attribute");
     assertEquals("Attribute", type$1.simpleName());
     assertEquals("Attribute", type$1.name());
     assertEquals("org.bukkit.attribute", type$1.codePackage().path());
     assertEquals("org.bukkit.attribute.Attribute", type$1.identifiableName());
     assertEquals("org.bukkit.attribute.Attribute", type$1.fullyQualifiedName());
 
-    final CodeClassType type$2 = CodeTypes.ofClass("org.bukkit.entity.Cow$Variant");
+    final CodeClassType type$2 = CodeTypes.of("org.bukkit.entity.Cow$Variant");
     assertEquals("Cow.Variant", type$2.simpleName());
     assertEquals("Variant", type$2.name());
     assertEquals("org.bukkit.entity", type$2.codePackage().path());
@@ -51,10 +51,10 @@ class TypeTests {
 
   @Test
   void testEquals() {
-    final CodeClassType cowVariant = CodeTypes.ofClass("org.bukkit.entity.Cow$Variant");
-    assertNotEquals(CodeTypes.ofClass("org.bukkit.entity.Cow"), cowVariant);
-    assertNotEquals(CodeTypes.ofClass("org.bukkit.entity.Variant"), cowVariant);
-    assertEquals(CodeTypes.ofClass("org.bukkit.entity.Cow$Variant"), cowVariant);
-    assertNotEquals(CodeTypes.ofClass("org.wrong.entity.Cow$Variant"), cowVariant);
+    final CodeClassType cowVariant = CodeTypes.of("org.bukkit.entity.Cow$Variant");
+    assertNotEquals(CodeTypes.of("org.bukkit.entity.Cow"), cowVariant);
+    assertNotEquals(CodeTypes.of("org.bukkit.entity.Variant"), cowVariant);
+    assertEquals(CodeTypes.of("org.bukkit.entity.Cow$Variant"), cowVariant);
+    assertNotEquals(CodeTypes.of("org.wrong.entity.Cow$Variant"), cowVariant);
   }
 }
