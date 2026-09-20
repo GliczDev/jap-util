@@ -80,30 +80,29 @@ public class JavaxRecord extends JavaxClassLike implements SourceRecord {
   @Override
   public SourceConstructor canonicalConstructor() {
     return element.map(e -> {
-        final List<? extends RecordComponentElement> components = e.getRecordComponents();
+      final List<? extends RecordComponentElement> components = e.getRecordComponents();
 
-        return e.getEnclosedElements().stream()
-          .filter(ele -> ele.getKind() == ElementKind.CONSTRUCTOR)
-          .map(ExecutableElement.class::cast)
-          .filter(ele -> {
-            final List<? extends VariableElement> parameters = ele.getParameters();
+      return e.getEnclosedElements().stream()
+        .filter(ele -> ele.getKind() == ElementKind.CONSTRUCTOR)
+        .map(ExecutableElement.class::cast)
+        .filter(ele -> {
+          final List<? extends VariableElement> parameters = ele.getParameters();
 
-            if (parameters.size() != components.size()) {
+          if (parameters.size() != components.size()) {
+            return false;
+          }
+
+          for (int i = 0; i < parameters.size(); i++) {
+            if (!processor.types().isSameType(parameters.get(i).asType(), components.get(i).asType())) {
               return false;
             }
+          }
 
-            for (int i = 0; i < parameters.size(); i++) {
-              if (!processor.types().isSameType(parameters.get(i).asType(), components.get(i).asType())) {
-                return false;
-              }
-            }
-
-            return true;
-          })
-          .map(method -> JavaxUtil.convertConstructor(processor, method))
-          .findFirst()
-          .orElseThrow();
-      }
-    );
+          return true;
+        })
+        .map(method -> JavaxUtil.convertConstructor(processor, method))
+        .findFirst()
+        .orElseThrow();
+    });
   }
 }
