@@ -47,7 +47,10 @@ public record CodeAnnotation(
   }
 
   public static CodeAnnotation of(ConvertToClassType type, List<? extends ConvertToAnnotationParameter> parameters) {
-    return new CodeAnnotation(type.toClassType(), parameters.stream().map(ConvertToAnnotationParameter::toAnnotationParameter).toList());
+    final List<CodeAnnotationParameter> parameterList = parameters.stream()
+      .map(ConvertToAnnotationParameter::toAnnotationParameter)
+      .toList();
+    return new CodeAnnotation(type.toClassType(), parameterList);
   }
 
   @Override

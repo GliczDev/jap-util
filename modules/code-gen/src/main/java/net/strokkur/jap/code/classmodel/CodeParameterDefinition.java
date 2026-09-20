@@ -47,7 +47,10 @@ public record CodeParameterDefinition(
   }
 
   public static CodeParameterDefinition of(ConvertToType type, String name, ConvertToAnnotation... annotations) {
-    return new CodeParameterDefinition(type.toType(), name, false, Arrays.stream(annotations).map(ConvertToAnnotation::toAnnotation).toList());
+    final List<CodeAnnotation> annotationList = Arrays.stream(annotations)
+      .map(ConvertToAnnotation::toAnnotation)
+      .toList();
+    return new CodeParameterDefinition(type.toType(), name, false, annotationList);
   }
 
   @Override

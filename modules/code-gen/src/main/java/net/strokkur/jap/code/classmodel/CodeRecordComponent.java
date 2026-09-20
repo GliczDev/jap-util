@@ -41,7 +41,10 @@ public record CodeRecordComponent(
 ) implements CodeAnnotated, CodeVisitable {
 
   public static CodeRecordComponent of(ConvertToType type, String name, ConvertToAnnotation... annotations) {
-    return new CodeRecordComponent(type.toType(), name, Arrays.stream(annotations).map(ConvertToAnnotation::toAnnotation).toList());
+    final List<CodeAnnotation> annotationList = Arrays.stream(annotations)
+      .map(ConvertToAnnotation::toAnnotation)
+      .toList();
+    return new CodeRecordComponent(type.toType(), name, annotationList);
   }
 
   @Override
