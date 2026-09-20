@@ -47,11 +47,6 @@ public record ClassLikeType(
   }
 
   @Override
-  public List<SourceAnnotation> annotations() {
-    return annotations;
-  }
-
-  @Override
   public String toString() {
     return "LikeType[" + codeType + "]";
   }
