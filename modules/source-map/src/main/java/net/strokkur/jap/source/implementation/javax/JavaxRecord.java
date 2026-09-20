@@ -24,11 +24,12 @@
 package net.strokkur.jap.source.implementation.javax;
 
 import net.strokkur.jap.source.SourceMapProcessor;
-import net.strokkur.jap.source.classmodel.SourceField;
-import net.strokkur.jap.source.classmodel.SourceInterface;
-import net.strokkur.jap.source.classmodel.SourceRecord;
-import net.strokkur.jap.source.classmodel.SourceRecordComponent;
+import net.strokkur.jap.source.classmodel.*;
 
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.RecordComponentElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import java.util.List;
 
@@ -59,5 +60,44 @@ public class JavaxRecord extends JavaxClassLike implements SourceRecord {
   @Override
   public List<SourceField> staticFields() {
     return allFields();
+  }
+
+  @Override
+  public List<SourceConstructor> constructors() {
+    return element.map(e ->
+      e.getEnclosedElements().stream()
+        .filter(ele -> ele.getKind() == ElementKind.CONSTRUCTOR)
+        .map(ExecutableElement.class::cast)
+        .map(method -> JavaxUtil.convertConstructor(processor, method))
+        .toList()
+    );
+  }
+
+  @Override
+  public SourceConstructor canonicalConstructor() {
+    return element.map(e ->
+      e.getEnclosedElements().stream()
+        .filter(ele -> ele.getKind() == ElementKind.CONSTRUCTOR)
+        .map(ExecutableElement.class::cast)
+        .filter(ele -> {
+          List<? extends VariableElement> parameters = ele.getParameters();
+          List<? extends RecordComponentElement> components = e.getRecordComponents();
+
+          if (parameters.size() != components.size()) {
+            return false;
+          }
+
+          for (int i = 0; i < parameters.size(); i++) {
+            if (!processor.types().isSameType(parameters.get(i).asType(), components.get(i).asType())) {
+              return false;
+            }
+          }
+
+          return true;
+        })
+        .map(method -> JavaxUtil.convertConstructor(processor, method))
+        .findFirst()
+        .orElseThrow()
+    );
   }
 }
