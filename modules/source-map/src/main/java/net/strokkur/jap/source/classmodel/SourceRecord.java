@@ -40,6 +40,10 @@ public interface SourceRecord extends SourceClassLike {
 
   List<SourceField> staticFields();
 
+  List<SourceConstructor> constructors();
+
+  SourceConstructor canonicalConstructor();
+
   //
   // Other
   //
