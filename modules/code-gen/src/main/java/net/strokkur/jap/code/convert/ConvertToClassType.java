@@ -23,6 +23,7 @@
  */
 package net.strokkur.jap.code.convert;
 
+import net.strokkur.jap.code.annotations.CodeAnnotation;
 import net.strokkur.jap.code.expression.Expressions;
 import net.strokkur.jap.code.expression.builder.ConstructorInvocationBuilder;
 import net.strokkur.jap.code.expression.source.MethodReferenceSource;
@@ -31,7 +32,7 @@ import net.strokkur.jap.code.type.CodeType;
 import net.strokkur.jap.code.type.generic.CodeGenericType;
 import net.strokkur.jap.code.type.generic.GenericEnclosure;
 
-public interface ConvertToClassType extends ConvertToType, ConvertToGenericType, ConvertToFieldMethodSource, ConvertToMethodReferenceSource {
+public interface ConvertToClassType extends ConvertToType, ConvertToGenericType, ConvertToFieldMethodSource, ConvertToMethodReferenceSource, ConvertToAnnotation {
   CodeClassType toClassType();
 
   @Override
@@ -61,5 +62,10 @@ public interface ConvertToClassType extends ConvertToType, ConvertToGenericType,
   default ConstructorInvocationBuilder ctor(ConvertToExpression... parameters) {
     return Expressions.ctorInvocation(this)
       .addParameters(parameters);
+  }
+
+  @Override
+  default CodeAnnotation toAnnotation() {
+    return CodeAnnotation.of(this);
   }
 }

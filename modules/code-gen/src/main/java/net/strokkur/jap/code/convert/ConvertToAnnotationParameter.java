@@ -1,5 +1,5 @@
 /*
- * This file is part of source-map, licensed under the MIT License.
+ * This file is part of code-gen, licensed under the MIT License.
  *
  * Copyright (c) 2026 Strokkur24
  *
@@ -21,27 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.strokkur.jap.source.annotation;
+package net.strokkur.jap.code.convert;
 
 import net.strokkur.jap.code.annotations.CodeAnnotationParameter;
-import net.strokkur.jap.code.convert.ConvertToAnnotationParameter;
-import net.strokkur.jap.code.convert.ConvertToExpression;
-import net.strokkur.jap.code.type.CodeClassType;
 
-public record SourceAnnotationParameter(
-  String name,
-  Object value,
-  ConvertToExpression expression
-) implements ConvertToAnnotationParameter {
-  public CodeClassType classValue() {
-    if (value instanceof CodeClassType type) {
-      return type;
-    }
-    throw new IllegalArgumentException("Expected Class, found " + value.getClass());
-  }
-
-  @Override
-  public CodeAnnotationParameter toAnnotationParameter() {
-    return CodeAnnotationParameter.of(name, expression);
-  }
+public interface ConvertToAnnotationParameter {
+  CodeAnnotationParameter toAnnotationParameter();
 }

@@ -1,5 +1,5 @@
 /*
- * This file is part of source-map, licensed under the MIT License.
+ * This file is part of code-gen, licensed under the MIT License.
  *
  * Copyright (c) 2026 Strokkur24
  *
@@ -21,43 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.strokkur.jap.source.annotation;
+package net.strokkur.jap.code.convert;
 
 import net.strokkur.jap.code.annotations.CodeAnnotation;
-import net.strokkur.jap.code.convert.ConvertToAnnotation;
-import net.strokkur.jap.code.type.CodeClassType;
-import net.strokkur.jap.source.classmodel.SourceAnnotationInterface;
-import net.strokkur.jap.source.util.Lazy;
 
-import java.lang.annotation.Annotation;
-import java.util.List;
-
-public record SourceAnnotation(
-  Lazy<? extends Annotation> valueGeneric,
-  SourceAnnotationInterface source,
-  List<SourceAnnotationParameter> parameters
-) implements ConvertToAnnotation {
-  public <T extends Annotation> T value(Class<T> type) {
-    return type.cast(valueGeneric.get());
-  }
-
-  public CodeClassType type() {
-    return source().toClassType();
-  }
-
-  public boolean isSet(String named) {
-    return parameters.stream()
-      .anyMatch(param -> param.name().equals(named));
-  }
-
-  public SourceAnnotationParameter parameter(String named) {
-    return parameters.stream()
-      .filter(param -> param.name().equals(named))
-      .findFirst().orElseThrow();
-  }
-
-  @Override
-  public CodeAnnotation toAnnotation() {
-    return CodeAnnotation.of(source, parameters);
-  }
+public interface ConvertToAnnotation {
+  CodeAnnotation toAnnotation();
 }

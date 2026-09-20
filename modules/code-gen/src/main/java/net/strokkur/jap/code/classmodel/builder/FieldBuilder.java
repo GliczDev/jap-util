@@ -25,7 +25,7 @@ package net.strokkur.jap.code.classmodel.builder;
 
 import net.strokkur.jap.code.annotations.CodeAnnotation;
 import net.strokkur.jap.code.classmodel.CodeField;
-import net.strokkur.jap.code.convert.ConvertToClassType;
+import net.strokkur.jap.code.convert.ConvertToAnnotation;
 import net.strokkur.jap.code.convert.ConvertToExpression;
 import net.strokkur.jap.code.convert.ConvertToField;
 import net.strokkur.jap.code.expression.CodeExpression;
@@ -62,15 +62,11 @@ public class FieldBuilder implements ConvertToField {
     return this;
   }
 
-  public FieldBuilder addAnnotations(ConvertToClassType... annotations) {
-    return addAnnotations(Arrays.stream(annotations)
-      .map(CodeAnnotation::of)
-      .toArray(CodeAnnotation[]::new)
+  public FieldBuilder addAnnotations(ConvertToAnnotation... annotations) {
+    this.annotations.addAll(Arrays.stream(annotations)
+      .map(ConvertToAnnotation::toAnnotation)
+      .toList()
     );
-  }
-
-  public FieldBuilder addAnnotations(CodeAnnotation... annotations) {
-    this.annotations.addAll(List.of(annotations));
     return this;
   }
 

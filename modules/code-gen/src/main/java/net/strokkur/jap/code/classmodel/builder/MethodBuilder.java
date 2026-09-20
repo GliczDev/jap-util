@@ -27,6 +27,7 @@ import net.strokkur.jap.code.annotations.CodeAnnotation;
 import net.strokkur.jap.code.classmodel.CodeBlock;
 import net.strokkur.jap.code.classmodel.CodeMethod;
 import net.strokkur.jap.code.classmodel.CodeParameterDefinition;
+import net.strokkur.jap.code.convert.ConvertToAnnotation;
 import net.strokkur.jap.code.convert.ConvertToClassType;
 import net.strokkur.jap.code.convert.ConvertToExpression;
 import net.strokkur.jap.code.convert.ConvertToMethod;
@@ -98,15 +99,11 @@ public class MethodBuilder implements ConvertToMethod {
     return this;
   }
 
-  public MethodBuilder addAnnotations(ConvertToClassType... annotations) {
-    return addAnnotations(Arrays.stream(annotations)
-      .map(CodeAnnotation::of)
-      .toArray(CodeAnnotation[]::new)
+  public MethodBuilder addAnnotations(ConvertToAnnotation... annotations) {
+    this.annotations.addAll(Arrays.stream(annotations)
+      .map(ConvertToAnnotation::toAnnotation)
+      .toList()
     );
-  }
-
-  public MethodBuilder addAnnotations(CodeAnnotation... annotations) {
-    this.annotations.addAll(List.of(annotations));
     return this;
   }
 
@@ -128,7 +125,7 @@ public class MethodBuilder implements ConvertToMethod {
     return this;
   }
 
-  public MethodBuilder addParameter(ConvertToType type, String name, CodeAnnotation... annotations) {
+  public MethodBuilder addParameter(ConvertToType type, String name, ConvertToAnnotation... annotations) {
     return addParameters(CodeParameterDefinition.of(type, name, annotations));
   }
 

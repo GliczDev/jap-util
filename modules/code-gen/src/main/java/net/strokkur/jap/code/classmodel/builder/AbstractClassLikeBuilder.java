@@ -26,6 +26,7 @@ package net.strokkur.jap.code.classmodel.builder;
 import net.strokkur.jap.code.annotations.CodeAnnotation;
 import net.strokkur.jap.code.classmodel.CodeField;
 import net.strokkur.jap.code.classmodel.CodeMethod;
+import net.strokkur.jap.code.convert.ConvertToAnnotation;
 import net.strokkur.jap.code.convert.ConvertToClassType;
 import net.strokkur.jap.code.convert.ConvertToField;
 import net.strokkur.jap.code.convert.ConvertToMethod;
@@ -69,16 +70,11 @@ abstract class AbstractClassLikeBuilder<R extends AbstractClassLikeBuilder<R>> {
   }
 
   @Contract(value = "_ -> this", mutates = "this")
-  public R addAnnotations(ConvertToClassType... annotations) {
-    return addAnnotations(Arrays.stream(annotations)
-      .map(CodeAnnotation::of)
-      .toArray(CodeAnnotation[]::new)
+  public R addAnnotations(ConvertToAnnotation... annotations) {
+    this.annotations.addAll(Arrays.stream(annotations)
+      .map(ConvertToAnnotation::toAnnotation)
+      .toList()
     );
-  }
-
-  @Contract(value = "_ -> this", mutates = "this")
-  public R addAnnotations(CodeAnnotation... annotations) {
-    this.annotations.addAll(List.of(annotations));
     return (R) this;
   }
 
