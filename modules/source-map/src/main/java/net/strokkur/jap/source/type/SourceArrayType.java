@@ -23,12 +23,18 @@
  */
 package net.strokkur.jap.source.type;
 
-import net.strokkur.jap.code.type.CodeType;
-import org.jetbrains.annotations.Unmodifiable;
+import net.strokkur.jap.code.convert.ConvertToGenericType;
+import net.strokkur.jap.code.type.CodeArrayType;
+import net.strokkur.jap.code.type.generic.CodeGenericType;
 
-public record SourceArrayType(SourceType inner) implements SourceType {
+public record SourceArrayType(SourceType inner) implements SourceType, ConvertToGenericType {
   @Override
-  public @Unmodifiable CodeType toType() {
+  public CodeArrayType toType() {
     return inner.toArray();
+  }
+
+  @Override
+  public CodeGenericType toGenericType() {
+    return toType().toGenericType();
   }
 }
