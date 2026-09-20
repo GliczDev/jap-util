@@ -25,11 +25,13 @@ package net.strokkur.jap.code.classmodel;
 
 import net.strokkur.jap.code.annotations.CodeAnnotated;
 import net.strokkur.jap.code.annotations.CodeAnnotation;
+import net.strokkur.jap.code.convert.ConvertToAnnotation;
 import net.strokkur.jap.code.convert.ConvertToType;
 import net.strokkur.jap.code.type.CodeType;
 import net.strokkur.jap.code.visitor.CodeVisitable;
 import net.strokkur.jap.code.visitor.CodeVisitor;
 
+import java.util.Arrays;
 import java.util.List;
 
 public record CodeParameterDefinition(
@@ -44,8 +46,8 @@ public record CodeParameterDefinition(
     return new CodeParameterDefinition(type.toType(), name, true, List.of());
   }
 
-  public static CodeParameterDefinition of(ConvertToType type, String name, CodeAnnotation... annotations) {
-    return new CodeParameterDefinition(type.toType(), name, false, List.of(annotations));
+  public static CodeParameterDefinition of(ConvertToType type, String name, ConvertToAnnotation... annotations) {
+    return new CodeParameterDefinition(type.toType(), name, false, Arrays.stream(annotations).map(ConvertToAnnotation::toAnnotation).toList());
   }
 
   @Override

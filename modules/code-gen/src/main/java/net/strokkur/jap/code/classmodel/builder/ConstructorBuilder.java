@@ -23,9 +23,9 @@
  */
 package net.strokkur.jap.code.classmodel.builder;
 
-import net.strokkur.jap.code.annotations.CodeAnnotation;
 import net.strokkur.jap.code.classmodel.CodeConstructor;
 import net.strokkur.jap.code.classmodel.CodeParameterDefinition;
+import net.strokkur.jap.code.convert.ConvertToAnnotation;
 import net.strokkur.jap.code.convert.ConvertToConstructor;
 import net.strokkur.jap.code.convert.ConvertToType;
 import net.strokkur.jap.code.type.CodeClassType;
@@ -50,7 +50,7 @@ public class ConstructorBuilder extends AbstractConstructorLikeBuilder<Construct
   }
 
   @Contract(value = "_,_,_ -> this", mutates = "this")
-  public ConstructorBuilder addParameter(ConvertToType type, String name, CodeAnnotation... annotations) {
+  public ConstructorBuilder addParameter(ConvertToType type, String name, ConvertToAnnotation... annotations) {
     return addParameters(CodeParameterDefinition.of(type, name, annotations));
   }
 

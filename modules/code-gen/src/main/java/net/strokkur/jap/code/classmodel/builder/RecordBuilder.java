@@ -23,11 +23,11 @@
  */
 package net.strokkur.jap.code.classmodel.builder;
 
-import net.strokkur.jap.code.annotations.CodeAnnotation;
 import net.strokkur.jap.code.classmodel.CodeConstructor;
 import net.strokkur.jap.code.classmodel.CodePrimaryConstructor;
 import net.strokkur.jap.code.classmodel.CodeRecord;
 import net.strokkur.jap.code.classmodel.CodeRecordComponent;
+import net.strokkur.jap.code.convert.ConvertToAnnotation;
 import net.strokkur.jap.code.convert.ConvertToClassType;
 import net.strokkur.jap.code.convert.ConvertToConstructor;
 import net.strokkur.jap.code.convert.ConvertToPrimaryConstructor;
@@ -84,7 +84,7 @@ public class RecordBuilder extends AbstractClassLikeBuilder.Typed<RecordBuilder>
   }
 
   @Contract(value = "_,_,_ -> this", mutates = "this")
-  public RecordBuilder addComponent(ConvertToType type, String name, CodeAnnotation... annotations) {
+  public RecordBuilder addComponent(ConvertToType type, String name, ConvertToAnnotation... annotations) {
     this.components.add(CodeRecordComponent.of(type, name, annotations));
     return this;
   }

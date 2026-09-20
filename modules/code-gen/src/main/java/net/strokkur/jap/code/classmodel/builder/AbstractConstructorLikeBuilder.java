@@ -25,6 +25,7 @@ package net.strokkur.jap.code.classmodel.builder;
 
 import net.strokkur.jap.code.annotations.CodeAnnotation;
 import net.strokkur.jap.code.classmodel.CodeBlock;
+import net.strokkur.jap.code.convert.ConvertToAnnotation;
 import net.strokkur.jap.code.convert.ConvertToClassType;
 import net.strokkur.jap.code.convert.ConvertToStatement;
 import net.strokkur.jap.code.documentation.CodeDocumentation;
@@ -68,8 +69,11 @@ abstract class AbstractConstructorLikeBuilder<R extends AbstractConstructorLikeB
   }
 
   @Contract(value = "_ -> this", mutates = "this")
-  public R addAnnotations(CodeAnnotation... annotations) {
-    this.annotations.addAll(List.of(annotations));
+  public R addAnnotations(ConvertToAnnotation... annotations) {
+    this.annotations.addAll(Arrays.stream(annotations)
+      .map(ConvertToAnnotation::toAnnotation)
+      .toList()
+    );
     return (R) this;
   }
 

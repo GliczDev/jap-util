@@ -23,6 +23,8 @@
  */
 package net.strokkur.jap.source.annotation;
 
+import net.strokkur.jap.code.annotations.CodeAnnotation;
+import net.strokkur.jap.code.convert.ConvertToAnnotation;
 import net.strokkur.jap.code.type.CodeClassType;
 import net.strokkur.jap.source.classmodel.SourceAnnotationInterface;
 import net.strokkur.jap.source.util.Lazy;
@@ -34,7 +36,7 @@ public record SourceAnnotation(
   Lazy<? extends Annotation> valueGeneric,
   SourceAnnotationInterface source,
   List<SourceAnnotationParameter> parameters
-) {
+) implements ConvertToAnnotation {
   public <T extends Annotation> T value(Class<T> type) {
     return type.cast(valueGeneric.get());
   }
@@ -52,5 +54,10 @@ public record SourceAnnotation(
     return parameters.stream()
       .filter(param -> param.name().equals(named))
       .findFirst().orElseThrow();
+  }
+
+  @Override
+  public CodeAnnotation toAnnotation() {
+    return CodeAnnotation.of(source, parameters.toArray(SourceAnnotationParameter[]::new));
   }
 }
