@@ -25,10 +25,21 @@ package net.strokkur.jap.source.type;
 
 import net.strokkur.jap.code.type.CodeType;
 import net.strokkur.jap.code.type.CodeTypes;
+import net.strokkur.jap.source.annotation.SourceAnnotation;
 
-public record SourceGenericType(String name) implements SourceType {
+import java.util.List;
+
+public record SourceGenericType(
+  String name,
+  List<SourceAnnotation> annotations
+) implements SourceType {
   @Override
   public CodeType toType() {
     return CodeTypes.generic(name);
+  }
+
+  @Override
+  public List<SourceAnnotation> annotations() {
+    return annotations;
   }
 }

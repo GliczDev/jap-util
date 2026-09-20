@@ -24,11 +24,22 @@
 package net.strokkur.jap.source.type;
 
 import net.strokkur.jap.code.type.CodeType;
+import net.strokkur.jap.source.annotation.SourceAnnotation;
 import org.jetbrains.annotations.Unmodifiable;
 
-public record SourceArrayType(SourceType inner) implements SourceType {
+import java.util.List;
+
+public record SourceArrayType(
+  SourceType inner,
+  List<SourceAnnotation> annotations
+) implements SourceType {
   @Override
   public @Unmodifiable CodeType toType() {
     return inner.toArray();
+  }
+
+  @Override
+  public List<SourceAnnotation> annotations() {
+    return annotations;
   }
 }
