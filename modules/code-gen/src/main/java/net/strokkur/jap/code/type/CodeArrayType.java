@@ -23,11 +23,14 @@
  */
 package net.strokkur.jap.code.type;
 
+import net.strokkur.jap.code.convert.ConvertToGenericType;
 import net.strokkur.jap.code.expression.source.MethodReferenceSource;
+import net.strokkur.jap.code.type.generic.CodeGenericType;
+import net.strokkur.jap.code.type.generic.GenericEnclosure;
 
 public record CodeArrayType(
   CodeType inner
-) implements CodeType, MethodReferenceSource {
+) implements CodeType, ConvertToGenericType, MethodReferenceSource {
   @Override
   public String simpleName() {
     return inner().simpleName() + "[]";
@@ -36,5 +39,10 @@ public record CodeArrayType(
   @Override
   public String fullyQualifiedName() {
     return inner().simpleName() + "[]";
+  }
+
+  @Override
+  public CodeGenericType toGenericType() {
+    return new CodeGenericType(null, GenericEnclosure.withType(this));
   }
 }

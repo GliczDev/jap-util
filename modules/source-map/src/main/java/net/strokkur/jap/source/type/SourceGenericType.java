@@ -23,12 +23,18 @@
  */
 package net.strokkur.jap.source.type;
 
-import net.strokkur.jap.code.type.CodeType;
+import net.strokkur.jap.code.convert.ConvertToGenericType;
 import net.strokkur.jap.code.type.CodeTypes;
+import net.strokkur.jap.code.type.generic.CodeGenericType;
 
-public record SourceGenericType(String name) implements SourceType {
+public record SourceGenericType(String name) implements SourceType, ConvertToGenericType {
   @Override
-  public CodeType toType() {
+  public CodeGenericType toType() {
     return CodeTypes.generic(name);
+  }
+
+  @Override
+  public CodeGenericType toGenericType() {
+    return toType();
   }
 }

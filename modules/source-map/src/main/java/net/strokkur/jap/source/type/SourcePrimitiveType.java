@@ -24,11 +24,10 @@
 package net.strokkur.jap.source.type;
 
 import net.strokkur.jap.code.type.CodePrimitiveType;
-import net.strokkur.jap.code.type.CodeType;
 
 public record SourcePrimitiveType(CodePrimitiveType codeType) implements SourceType {
   @Override
-  public CodeType toType() {
+  public CodePrimitiveType toType() {
     return codeType;
   }
 }
