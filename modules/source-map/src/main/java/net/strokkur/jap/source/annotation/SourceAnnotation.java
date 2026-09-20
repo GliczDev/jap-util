@@ -58,6 +58,6 @@ public record SourceAnnotation(
 
   @Override
   public CodeAnnotation toAnnotation() {
-    return CodeAnnotation.of(source, parameters.toArray(SourceAnnotationParameter[]::new));
+    return CodeAnnotation.of(source, parameters);
   }
 }

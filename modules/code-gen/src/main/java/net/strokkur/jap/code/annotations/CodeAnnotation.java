@@ -31,7 +31,6 @@ import net.strokkur.jap.code.type.CodeClassType;
 import net.strokkur.jap.code.visitor.CodeVisitable;
 import net.strokkur.jap.code.visitor.CodeVisitor;
 
-import java.util.Arrays;
 import java.util.List;
 
 public record CodeAnnotation(
@@ -44,7 +43,11 @@ public record CodeAnnotation(
   }
 
   public static CodeAnnotation of(ConvertToClassType type, ConvertToAnnotationParameter... parameters) {
-    return new CodeAnnotation(type.toClassType(), Arrays.stream(parameters).map(ConvertToAnnotationParameter::toAnnotationParameter).toList());
+    return of(type.toClassType(), List.of(parameters));
+  }
+
+  public static CodeAnnotation of(ConvertToClassType type, List<? extends ConvertToAnnotationParameter> parameters) {
+    return new CodeAnnotation(type.toClassType(), parameters.stream().map(ConvertToAnnotationParameter::toAnnotationParameter).toList());
   }
 
   @Override
