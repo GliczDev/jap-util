@@ -24,9 +24,11 @@
 package net.strokkur.jap.source.implementation.javax;
 
 import com.sun.source.tree.ExpressionTree;
+import net.strokkur.jap.code.convert.ConvertToAnnotation;
 import net.strokkur.jap.code.convert.ConvertToGenericType;
 import net.strokkur.jap.code.type.CodeClassType;
 import net.strokkur.jap.code.type.CodePackage;
+import net.strokkur.jap.code.type.CodePrimitiveType;
 import net.strokkur.jap.code.type.CodeTypes;
 import net.strokkur.jap.code.type.generic.CodeGenericTypeDefinition;
 import net.strokkur.jap.code.type.generic.GenericEnclosure;
@@ -37,10 +39,7 @@ import net.strokkur.jap.source.annotation.SourceAnnotationParameter;
 import net.strokkur.jap.source.classmodel.SourceClassLike;
 import net.strokkur.jap.source.implementation.javax.visitor.JavaxAnnotationValueToExpression;
 import net.strokkur.jap.source.implementation.javax.visitor.JavaxTreeToExpression;
-import net.strokkur.jap.source.type.ClassLikeType;
-import net.strokkur.jap.source.type.SourceArrayType;
-import net.strokkur.jap.source.type.SourceGenericType;
-import net.strokkur.jap.source.type.SourceType;
+import net.strokkur.jap.source.type.*;
 import net.strokkur.jap.source.util.Lazy;
 import net.strokkur.jap.source.util.LazyExpression;
 import org.jetbrains.annotations.Unmodifiable;
@@ -121,7 +120,8 @@ public final class ElementUtil {
     return new CodeClassType(
       CodePackage.of(pkg.getQualifiedName().toString()),
       String.join(".", nameComponents.reversed()),
-      null
+      null,
+      List.of()
     );
   }
 
@@ -129,7 +129,8 @@ public final class ElementUtil {
     final Name name = processor.elements().getBinaryName((TypeElement) declared.asElement());
 
     final List<? extends TypeMirror> typeArgs = declared.getTypeArguments();
-    final CodeClassType out = CodeTypes.of(name.toString());
+    final CodeClassType out = CodeTypes.of(name.toString())
+      .withAnnotations(mapAnnotations(processor, declared).toArray(ConvertToAnnotation[]::new));
 
     if (!typeArgs.isEmpty()) {
       return out.typed(typeArgs.stream()
@@ -155,7 +156,10 @@ public final class ElementUtil {
 
   public static SourceType mapType(SourceMapProcessor processor, TypeMirror mirror) {
     if (mirror.getKind() == TypeKind.ARRAY && mirror instanceof ArrayType array) {
-      return new SourceArrayType(mapType(processor, array.getComponentType()));
+      return new SourceArrayType(
+        mapType(processor, array.getComponentType()),
+        mapAnnotations(processor, array)
+      );
     }
     if (mirror.getKind() == TypeKind.VOID) {
       return SourceType.VOID;
@@ -163,14 +167,14 @@ public final class ElementUtil {
 
     if (mirror.getKind().isPrimitive()) {
       return switch (mirror.getKind()) {
-        case BYTE -> SourceType.BYTE;
-        case BOOLEAN -> SourceType.BOOL;
-        case SHORT -> SourceType.SHORT;
-        case CHAR -> SourceType.CHAR;
-        case INT -> SourceType.INT;
-        case LONG -> SourceType.LONG;
-        case FLOAT -> SourceType.FLOAT;
-        case DOUBLE -> SourceType.DOUBLE;
+        case BYTE -> new SourcePrimitiveType(CodePrimitiveType.BYTE, mapAnnotations(processor, mirror));
+        case BOOLEAN -> new SourcePrimitiveType(CodePrimitiveType.BOOL, mapAnnotations(processor, mirror));
+        case SHORT -> new SourcePrimitiveType(CodePrimitiveType.SHORT, mapAnnotations(processor, mirror));
+        case CHAR -> new SourcePrimitiveType(CodePrimitiveType.CHAR, mapAnnotations(processor, mirror));
+        case INT -> new SourcePrimitiveType(CodePrimitiveType.INT, mapAnnotations(processor, mirror));
+        case LONG -> new SourcePrimitiveType(CodePrimitiveType.LONG, mapAnnotations(processor, mirror));
+        case FLOAT -> new SourcePrimitiveType(CodePrimitiveType.FLOAT, mapAnnotations(processor, mirror));
+        case DOUBLE -> new SourcePrimitiveType(CodePrimitiveType.DOUBLE, mapAnnotations(processor, mirror));
 
         // we don't know; this type is not mirrored yet.
         default -> SourceType.UNKNOWN;
@@ -179,12 +183,16 @@ public final class ElementUtil {
     if (mirror.getKind() == TypeKind.DECLARED && mirror instanceof DeclaredType declared) {
       return new ClassLikeType(
         mapDeclared(processor, declared),
-        getClassLikeFor(processor, (TypeElement) declared.asElement())
+        getClassLikeFor(processor, (TypeElement) declared.asElement()),
+        mapAnnotations(processor, declared)
       );
     }
 
     if (mirror.getKind() == TypeKind.TYPEVAR) {
-      return new SourceGenericType(mirror.toString());
+      return new SourceGenericType(
+        mirror.toString(),
+        mapAnnotations(processor, mirror)
+      );
     }
 
     throw new IllegalArgumentException("Unknown type kind: " + mirror.getKind());

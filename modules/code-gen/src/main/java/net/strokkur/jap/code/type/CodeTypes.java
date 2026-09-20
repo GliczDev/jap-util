@@ -105,7 +105,8 @@ public final class CodeTypes {
     return new CodeClassType(
       CodePackage.of(splitPackage.subList(0, splitPackage.size() - 1)),
       String.join(".", namePath).split("<", 1)[0],
-      types
+      types,
+      List.of()
     );
   }
 

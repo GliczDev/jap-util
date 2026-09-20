@@ -25,12 +25,15 @@ package net.strokkur.jap.source.type;
 
 import net.strokkur.jap.code.convert.ConvertToClassType;
 import net.strokkur.jap.code.type.CodeClassType;
-import net.strokkur.jap.code.type.CodeType;
+import net.strokkur.jap.source.annotation.SourceAnnotation;
 import net.strokkur.jap.source.classmodel.SourceClassLike;
+
+import java.util.List;
 
 public record ClassLikeType(
   CodeClassType codeType,
-  SourceClassLike like
+  SourceClassLike like,
+  List<SourceAnnotation> annotations
 ) implements SourceType, ConvertToClassType {
 
   @Override
@@ -39,8 +42,13 @@ public record ClassLikeType(
   }
 
   @Override
-  public CodeType toType() {
+  public CodeClassType toType() {
     return codeType;
+  }
+
+  @Override
+  public List<SourceAnnotation> annotations() {
+    return annotations;
   }
 
   @Override
