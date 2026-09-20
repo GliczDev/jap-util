@@ -25,8 +25,9 @@ package net.strokkur.jap.source.type;
 
 import net.strokkur.jap.code.convert.ConvertToType;
 import net.strokkur.jap.code.type.CodePrimitiveType;
+import net.strokkur.jap.source.classmodel.SourceClassLike;
 
-public interface SourceType extends ConvertToType {
+public sealed interface SourceType extends ConvertToType permits SourceClassLike, ClassLikeType, SourceArrayType, SourceGenericType, SourcePrimitiveType, UnknownType {
   SourceType VOID = primitive(CodePrimitiveType.VOID);
   SourceType UNKNOWN = UnknownType.UNKNOWN;
 

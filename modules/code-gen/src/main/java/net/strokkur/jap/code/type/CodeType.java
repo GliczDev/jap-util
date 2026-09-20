@@ -25,10 +25,11 @@ package net.strokkur.jap.code.type;
 
 import net.strokkur.jap.code.convert.ConvertToType;
 import net.strokkur.jap.code.expression.source.FieldMethodSource;
+import net.strokkur.jap.code.type.generic.CodeGenericType;
 import net.strokkur.jap.code.visitor.CodeVisitable;
 import net.strokkur.jap.code.visitor.CodeVisitor;
 
-public interface CodeType extends ConvertToType, CodeVisitable, FieldMethodSource {
+public sealed interface CodeType extends ConvertToType, CodeVisitable, FieldMethodSource permits CodeArrayType, CodeClassType, CodePrimitiveType, CodeGenericType {
 
   /// A code-representable name of this type, if an import is present.
   String simpleName();
