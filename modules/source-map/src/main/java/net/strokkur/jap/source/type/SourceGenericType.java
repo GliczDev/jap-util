@@ -23,6 +23,7 @@
  */
 package net.strokkur.jap.source.type;
 
+import net.strokkur.jap.code.convert.ConvertToAnnotation;
 import net.strokkur.jap.code.convert.ConvertToGenericType;
 import net.strokkur.jap.code.type.CodeTypes;
 import net.strokkur.jap.code.type.generic.CodeGenericType;
@@ -36,7 +37,7 @@ public record SourceGenericType(
 ) implements SourceType, ConvertToGenericType {
   @Override
   public CodeGenericType toType() {
-    return CodeTypes.generic(name);
+    return CodeTypes.generic(name).withAnnotations(annotations.toArray(ConvertToAnnotation[]::new));
   }
 
   @Override

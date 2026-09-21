@@ -23,6 +23,7 @@
  */
 package net.strokkur.jap.source.type;
 
+import net.strokkur.jap.code.convert.ConvertToAnnotation;
 import net.strokkur.jap.code.convert.ConvertToGenericType;
 import net.strokkur.jap.code.type.CodeArrayType;
 import net.strokkur.jap.code.type.generic.CodeGenericType;
@@ -36,7 +37,7 @@ public record SourceArrayType(
 ) implements SourceType, ConvertToGenericType {
   @Override
   public CodeArrayType toType() {
-    return inner.toArray();
+    return inner.toArray().withAnnotations(annotations.toArray(ConvertToAnnotation[]::new));
   }
 
   @Override

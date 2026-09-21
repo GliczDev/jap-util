@@ -37,12 +37,12 @@ public record ClassLikeType(
 ) implements SourceType, ConvertToClassType {
 
   @Override
-  public CodeClassType toClassType() {
+  public CodeClassType toType() {
     return codeType;
   }
 
   @Override
-  public CodeClassType toType() {
+  public CodeClassType toClassType() {
     return codeType;
   }
 

@@ -59,6 +59,18 @@ public record CodeClassType(
     return codePackage().path() + "." + simpleName();
   }
 
+  @Override
+  public CodeClassType withAnnotations(ConvertToAnnotation... annotations) {
+    return new CodeClassType(
+      codePackage,
+      simpleName,
+      genericTypes,
+      Arrays.stream(annotations)
+        .map(ConvertToAnnotation::toAnnotation)
+        .toList()
+    );
+  }
+
   public CodeClassType toTopLevel() {
     return new CodeClassType(
       codePackage,
@@ -90,18 +102,6 @@ public record CodeClassType(
         .map(ConvertToGenericType::toGenericType)
         .toList(),
       annotations
-    );
-  }
-
-  @Override
-  public CodeClassType withAnnotations(ConvertToAnnotation... annotations) {
-    return new CodeClassType(
-      codePackage,
-      simpleName,
-      genericTypes,
-      Arrays.stream(annotations)
-        .map(ConvertToAnnotation::toAnnotation)
-        .toList()
     );
   }
 

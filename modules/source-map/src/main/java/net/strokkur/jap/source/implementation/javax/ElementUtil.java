@@ -170,19 +170,30 @@ public final class ElementUtil {
     }
 
     if (mirror.getKind().isPrimitive()) {
-      return switch (mirror.getKind()) {
-        case BYTE -> new SourcePrimitiveType(CodePrimitiveType.BYTE, mapAnnotations(processor, mirror));
-        case BOOLEAN -> new SourcePrimitiveType(CodePrimitiveType.BOOL, mapAnnotations(processor, mirror));
-        case SHORT -> new SourcePrimitiveType(CodePrimitiveType.SHORT, mapAnnotations(processor, mirror));
-        case CHAR -> new SourcePrimitiveType(CodePrimitiveType.CHAR, mapAnnotations(processor, mirror));
-        case INT -> new SourcePrimitiveType(CodePrimitiveType.INT, mapAnnotations(processor, mirror));
-        case LONG -> new SourcePrimitiveType(CodePrimitiveType.LONG, mapAnnotations(processor, mirror));
-        case FLOAT -> new SourcePrimitiveType(CodePrimitiveType.FLOAT, mapAnnotations(processor, mirror));
-        case DOUBLE -> new SourcePrimitiveType(CodePrimitiveType.DOUBLE, mapAnnotations(processor, mirror));
+      CodePrimitiveType codeType = switch (mirror.getKind()) {
+        case BYTE -> CodePrimitiveType.BYTE;
+        case BOOLEAN -> CodePrimitiveType.BOOL;
+        case SHORT -> CodePrimitiveType.SHORT;
+        case CHAR -> CodePrimitiveType.CHAR;
+        case INT -> CodePrimitiveType.INT;
+        case LONG -> CodePrimitiveType.LONG;
+        case FLOAT -> CodePrimitiveType.FLOAT;
+        case DOUBLE -> CodePrimitiveType.DOUBLE;
 
         // we don't know; this type is not mirrored yet.
-        default -> SourceType.UNKNOWN;
+        default -> null;
       };
+
+      if (codeType == null) {
+        return SourceType.UNKNOWN;
+      }
+
+      List<SourceAnnotation> annotations = mapAnnotations(processor, mirror);
+
+      return new SourcePrimitiveType(
+        codeType.withAnnotations(annotations.toArray(ConvertToAnnotation[]::new)),
+        annotations
+      );
     }
     if (mirror.getKind() == TypeKind.DECLARED && mirror instanceof DeclaredType declared) {
       return new ClassLikeType(
