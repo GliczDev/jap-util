@@ -229,7 +229,7 @@ public class ImportGatheringVisitor implements CodeVisitor<Set<CodeClassType>> {
   @Override
   public Set<CodeClassType> visitAnnotation(CodeAnnotation codeAnnotation) {
     return join(
-      Set.of(codeAnnotation.type()),
+      codeAnnotation.type().accept(this),
       collect(codeAnnotation.parameters())
     );
   }
