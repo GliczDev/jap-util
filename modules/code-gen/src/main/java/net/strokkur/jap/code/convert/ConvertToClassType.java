@@ -65,10 +65,6 @@ public interface ConvertToClassType extends ConvertToType, ConvertToGenericType,
       .addParameters(parameters);
   }
 
-  default CodeClassType withAnnotations(ConvertToAnnotation... annotations) {
-    return toClassType().withAnnotations(annotations);
-  }
-
   @Override
   default CodeAnnotation toAnnotation() {
     return CodeAnnotation.of(this);

@@ -23,12 +23,13 @@
  */
 package net.strokkur.jap.code.convert;
 
+import net.strokkur.jap.code.annotations.CodeAnnotated;
 import net.strokkur.jap.code.expression.source.FieldMethodSource;
 import net.strokkur.jap.code.type.CodeArrayType;
 import net.strokkur.jap.code.type.CodeType;
 import net.strokkur.jap.code.type.CodeTypes;
 
-public interface ConvertToType extends ConvertToFieldMethodSource {
+public interface ConvertToType extends CodeAnnotated, ConvertToFieldMethodSource {
   CodeType toType();
 
   default CodeType withoutGenerics() {
@@ -48,5 +49,13 @@ public interface ConvertToType extends ConvertToFieldMethodSource {
   @Override
   default FieldMethodSource toFieldMethodSource() {
     return toType();
+  }
+
+  default CodeType withAnnotations(ConvertToAnnotation... annotations) {
+    return toType().withAnnotations(annotations);
+  }
+
+  default CodeType withoutAnnotations() {
+    return withAnnotations();
   }
 }
