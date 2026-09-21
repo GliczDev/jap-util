@@ -50,6 +50,7 @@ class RecordGenTests extends AbstractGenTest {
       /// Documentation
       @NullMarked
       public record Triple<L, M, R>(
+        String tripleName,
         L left,
         M middle,
         R right
@@ -58,7 +59,7 @@ class RecordGenTests extends AbstractGenTest {
       
         /// Constructs a Triple with all three same values.
         public static <S> Triple<S, S, S> of(S same) {
-          return new Triple<>(same, same, same);
+          return new Triple<>("same", same, same, same);
         }
       
         /// Constructs a new Triple
@@ -92,6 +93,7 @@ class RecordGenTests extends AbstractGenTest {
         CodeGenericTypeDefinition.of("M"),
         CodeGenericTypeDefinition.of("R")
       )
+      .addComponent(JavaTypes.STRING, "tripleName")
       .addComponent(CodeTypes.generic("L"), "left")
       .addComponent(CodeTypes.generic("M"), "middle")
       .addComponent(CodeTypes.generic("R"), "right")
@@ -120,6 +122,7 @@ class RecordGenTests extends AbstractGenTest {
         .setCode(
           Statements.returnStmt(
             TestTypes.TRIPLE.typed().ctor(
+              Expressions.string("same"),
               Expressions.variable("same"),
               Expressions.variable("same"),
               Expressions.variable("same")
