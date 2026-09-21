@@ -404,7 +404,7 @@ public class JavaSourcePrintingVisitor extends AbstractSourcePrintingVisitor {
         joining(recordComponent.annotations(), " ");
         builder.append(' ');
       }
-      builder.append(recordComponent.type());
+      builder.append(recordComponent.type().accept(this));
       builder.append(' ').append(recordComponent.name());
     });
   }
