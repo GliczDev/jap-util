@@ -401,7 +401,7 @@ public class JavaSourcePrintingVisitor extends AbstractSourcePrintingVisitor {
   public StringBuilder visitRecordComponent(CodeRecordComponent recordComponent) {
     return append(builder -> {
       if (recordComponent.hasAnnotations()) {
-        joining(recordComponent.annotations(), " ");
+        builder.append(joining(recordComponent.annotations(), " "));
         builder.append(' ');
       }
       builder.append(recordComponent.type().accept(this));

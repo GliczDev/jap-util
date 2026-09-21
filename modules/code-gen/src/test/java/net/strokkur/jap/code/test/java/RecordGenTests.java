@@ -50,7 +50,7 @@ class RecordGenTests extends AbstractGenTest {
       /// Documentation
       @NullMarked
       public record Triple<L, M, R>(
-        String tripleName,
+        @Nullable String tripleName,
         L left,
         M middle,
         R right
@@ -81,7 +81,8 @@ class RecordGenTests extends AbstractGenTest {
       JavaTypes.STRING,
       JavaTypes.OBJECTS,
       JavaTypes.OVERRIDE,
-      JSpecifyTypes.NULL_MARKED
+      JSpecifyTypes.NULL_MARKED,
+      JSpecifyTypes.NULLABLE
     );
 
     final CodeVisitable ast = CodeRecord.builder(TestTypes.TRIPLE)
@@ -93,7 +94,7 @@ class RecordGenTests extends AbstractGenTest {
         CodeGenericTypeDefinition.of("M"),
         CodeGenericTypeDefinition.of("R")
       )
-      .addComponent(JavaTypes.STRING, "tripleName")
+      .addComponent(JavaTypes.STRING, "tripleName", JSpecifyTypes.NULLABLE)
       .addComponent(CodeTypes.generic("L"), "left")
       .addComponent(CodeTypes.generic("M"), "middle")
       .addComponent(CodeTypes.generic("R"), "right")
