@@ -170,7 +170,7 @@ public final class ElementUtil {
     }
 
     if (mirror.getKind().isPrimitive()) {
-      CodePrimitiveType codeType = switch (mirror.getKind()) {
+      final CodePrimitiveType codeType = switch (mirror.getKind()) {
         case BYTE -> CodePrimitiveType.BYTE;
         case BOOLEAN -> CodePrimitiveType.BOOL;
         case SHORT -> CodePrimitiveType.SHORT;
@@ -188,7 +188,7 @@ public final class ElementUtil {
         return SourceType.UNKNOWN;
       }
 
-      List<SourceAnnotation> annotations = mapAnnotations(processor, mirror);
+      final List<SourceAnnotation> annotations = mapAnnotations(processor, mirror);
 
       return new SourcePrimitiveType(
         codeType.withAnnotations(annotations.toArray(ConvertToAnnotation[]::new)),
