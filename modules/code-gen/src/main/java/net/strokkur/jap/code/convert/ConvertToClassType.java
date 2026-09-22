@@ -60,6 +60,16 @@ public interface ConvertToClassType extends ConvertToType, ConvertToGenericType,
     return toClassType().typed(types);
   }
 
+  @Override
+  default CodeClassType withAnnotations(ConvertToAnnotation... annotations) {
+    return toClassType().withAnnotations(annotations);
+  }
+
+  @Override
+  default CodeClassType withoutAnnotations() {
+    return withAnnotations();
+  }
+
   default ConstructorInvocationBuilder ctor(ConvertToExpression... parameters) {
     return Expressions.ctorInvocation(this)
       .addParameters(parameters);
